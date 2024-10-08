@@ -1,0 +1,79 @@
+[
+  {
+    "width": 300,
+    "x": 100,
+    "y": 100,
+    "height": 45,
+    "name": "productos",
+    "properties": {
+      "height": 40,
+      "rows": [
+        {
+          "name": "id",
+          "type": "number",
+          "pk": true,
+          "nn": true
+        },
+        {
+          "name": "name",
+          "type": "varchar(300)"
+        },
+        {
+          "name": "enable",
+          "type": "varchar(300)"
+        },
+        {
+          "name": "FechaNacimiento",
+          "type": "date"
+        },
+        {
+          "name": "CreateAt",
+          "type": "timestamp"
+        },
+        {
+          "name": "Example",
+          "type": "varchar(300)"
+        }
+      ]
+    }
+  },
+  {
+    "width": 300,
+    "x": 700,
+    "y": 300,
+    "height": 45,
+    "name": "articulos",
+    "properties": {
+      "height": 40,
+      "rows": [
+        {
+          "name": "id",
+          "type": "number",
+          "pk": true,
+          "nn": true
+        },
+        {
+          "name": "name",
+          "type": "varchar(300)"
+        },
+        {
+          "name": "enable",
+          "type": "varchar(300)"
+        },
+        {
+          "name": "BirthDate",
+          "type": "date",
+          "nn": true
+        },
+        {
+          "name": "CreateAt",
+          "type": "timestamp"
+        },
+        {
+          "name": "Example",
+          "type": "varchar(300)"
+        }
+      ]
+    }
+  }
+]
