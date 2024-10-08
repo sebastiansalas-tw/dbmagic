@@ -39,7 +39,10 @@ interface IDrawEntityBase {
   nn?: boolean;
 }
 
-type IDrawEntityTable = Omit<IDrawEntityBase, "color" | "pk" | "align" | "type">;
+type IDrawEntityTable = Omit<
+  IDrawEntityBase,
+  "color" | "pk" | "align" | "type"
+>;
 type IDrawEntityHeader = Omit<
   IDrawEntityBase,
   "properties" | "color" | "name" | "img" | "pk" | "align" | "type"
@@ -48,15 +51,12 @@ type IDrawEntityProperty = Omit<
   IDrawEntityBase,
   "properties" | "name" | "img" | "pk" | "align" | "type"
 >;
-type IDrawEntityText = Omit<
-  IDrawEntityBase,
-  "properties" | "img"
->;
+type IDrawEntityText = Omit<IDrawEntityBase, "properties" | "img">;
 
 interface ISvgImages {
   [tableIcon: string]: string;
   primaryKeyIcon: string;
-};
+}
 
 interface IDrawSvg {
   ctx: CanvasRenderingContext2D;
@@ -66,12 +66,12 @@ interface IDrawSvg {
   height: number;
   widthImage: number;
   heightImage: number;
-};
+}
 
 interface IFontFamilyPrompts {
   fontSize: string;
   fontWeight?: number;
-};
+}
 
 interface IFontFamily {
   [textProperty: string]: (prompts: IFontFamilyPrompts) => string;
@@ -87,7 +87,7 @@ function Index(): ReactElement<HTMLDivElement> {
     nullableIcon: "/nullableIcon.svg",
     notNullableIcon: "/notNullableIcon.svg",
   });
-  const [zoom, setZoom] = useState<number>(1);
+  const [zoom, setZoom] = useState<number>(0.9);
   const [loadedImages, setLoadedImages] = useState<{
     [key: string]: HTMLImageElement;
   }>({});
@@ -150,7 +150,7 @@ function Index(): ReactElement<HTMLDivElement> {
             image: loadedImages.tableIcon,
             widthImage: 25,
             heightImage: 25,
-          });
+          });// Ejemplo de coordenadas
         });
       }
     }
@@ -171,6 +171,7 @@ function Index(): ReactElement<HTMLDivElement> {
     const { ctx, x, y, width, height, properties, name } = prompts;
     const { rows, height: heightProperty } = properties;
     drawHeaderTable({ ctx, x, y, width, height });
+
     drawEntityText({
       ctx,
       x: x + 5,
@@ -297,15 +298,6 @@ function Index(): ReactElement<HTMLDivElement> {
     ctx.stroke();
   };
 
-  const drawEntityTextHeader = (prompts: IDrawEntityText): void => {
-    const { ctx, y, x, height, name } = prompts;
-    ctx.beginPath();
-    ctx.font =
-      "500 15px Inter var,ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emojif";
-    ctx.fillStyle = "white";
-    ctx.fillText(name, x + 45, y + height / 2 + 5);
-  };
-
   const drawEntityText = (prompts: IDrawEntityText): void => {
     const { ctx, y, x, height, width, name, pk, align, type, color } = prompts;
     ctx.beginPath();
@@ -322,7 +314,7 @@ function Index(): ReactElement<HTMLDivElement> {
       });
     }
 
-    if(type === "titleTable"){
+    if (type === "titleTable") {
       ctx.font = fontFamily.textProperty({
         fontSize: "15px",
         fontWeight: 500,
@@ -331,7 +323,6 @@ function Index(): ReactElement<HTMLDivElement> {
 
     const textMetrics = ctx.measureText(name);
     const textWidth = textMetrics.width;
-
 
     ctx.fillStyle = color;
     ctx.textAlign = align;
@@ -346,7 +337,7 @@ function Index(): ReactElement<HTMLDivElement> {
 
     let textX: number = x + addPositionX;
 
-    if(type === "typeProperty"){
+    if (type === "typeProperty") {
       textX = x + width - 15;
     }
 
@@ -355,8 +346,46 @@ function Index(): ReactElement<HTMLDivElement> {
 
   const drawSVG = (prompts: IDrawSvg): void => {
     const { ctx, image, x, y, height, widthImage, heightImage } = prompts;
-      
+
     ctx.drawImage(image, x, y, widthImage, heightImage);
+  };
+
+  const drawArrowWithVertices = (
+    ctx: CanvasRenderingContext2D,
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number
+  ): void => {
+    const headlen = 10; // Longitud de la cabeza de la flecha
+    const middleX = (fromX + toX) / 2;
+    const middleY = (fromY + toY) / 2;
+    const radius = 10; // Radio de los vértices redondeados
+
+    ctx.setLineDash([5, 5]);
+
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(middleX - radius, fromY);
+    ctx.arcTo(middleX, fromY, middleX, fromY + radius, radius);
+    ctx.lineTo(middleX, toY - radius);
+    ctx.arcTo(middleX, toY, middleX + radius, toY, radius);
+    ctx.lineTo(toX, toY);
+    ctx.stroke();
+
+    const angle = Math.atan2(toY - middleY, toX - middleX);
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(
+      toX - headlen * Math.cos(angle - Math.PI / 6),
+      toY - headlen * Math.sin(angle - Math.PI / 6)
+    );
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(
+      toX - headlen * Math.cos(angle + Math.PI / 6),
+      toY - headlen * Math.sin(angle + Math.PI / 6)
+    );
+    ctx.stroke();
   };
 
   return (

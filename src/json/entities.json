@@ -72,6 +72,15 @@
         {
           "name": "Example",
           "type": "varchar(300)"
+        },
+        {
+          "name": "productId",
+          "type": "number",
+          "fk": true,
+          "relation": {
+            "table": "t_productos",
+            "column": "c_id"
+          }
         }
       ]
     }
